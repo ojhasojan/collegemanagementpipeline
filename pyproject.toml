@@ -1,0 +1,23 @@
+[project]
+name = "collegemanagementpipeline"
+version = "0.1.0"
+description = "College academic data pipeline"
+requires-python = ">=3.11"
+
+dependencies = [
+    "pandas",
+    "psycopg2-binary",
+    "gspread",
+    "google-auth",
+    "python-dotenv",
+    "dbt-postgres",
+    "apache-airflow",
+    "loguru",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest",
+    "black",
+    "ruff",
+]

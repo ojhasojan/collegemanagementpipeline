@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+logs/*.log
+data/raw/*
+data/staging/*
+!data/raw/.gitkeep
+!data/staging/.gitkeep
+target/
+dbt_packages/
