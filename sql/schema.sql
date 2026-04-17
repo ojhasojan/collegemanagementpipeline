@@ -57,7 +57,8 @@ CREATE TABLE subjects (
 CREATE TABLE subject_teacher (
     id SERIAL PRIMARY KEY,
     subject_id INT REFERENCES subjects(subject_id),
-    teacher_id INT REFERENCES teachers(teacher_id)
+    teacher_id INT REFERENCES teachers(teacher_id),
+    teacher_role VARCHAR(10) CHECK (teacher_role IN ('THEORY', 'LAB'))
 );
 
 -- =========================
@@ -75,7 +76,8 @@ CREATE TABLE enrollments (
 -- =========================
 CREATE TABLE exams (
     exam_id SERIAL PRIMARY KEY,
-    exam_name VARCHAR(50) UNIQUE NOT NULL
+    exam_name VARCHAR(50) UNIQUE NOT NULL,
+    applies_to VARCHAR(10) NOT NULL CHECK (applies_to IN ('THEORY', 'LAB', 'BOTH'))
 );
 
 -- =========================
