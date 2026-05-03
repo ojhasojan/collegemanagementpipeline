@@ -1,0 +1,1 @@
+{{ public_source('subject_teacher') }}

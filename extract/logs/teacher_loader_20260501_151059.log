@@ -1,0 +1,6 @@
+2026-05-01 15:11:02 | INFO | teacher_loader | Marks loaded into local
+2026-05-01 15:11:03 | INFO | teacher_loader | Marks loaded into supabase
+2026-05-01 15:11:05 | INFO | teacher_loader | Theory attendance loaded into local
+2026-05-01 15:11:07 | INFO | teacher_loader | Theory attendance loaded into supabase
+2026-05-01 15:11:09 | INFO | teacher_loader | Lab attendance loaded into local
+2026-05-01 15:11:10 | INFO | teacher_loader | Lab attendance loaded into supabase

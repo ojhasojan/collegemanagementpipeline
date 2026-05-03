@@ -1,0 +1,6 @@
+2026-05-01 15:10:59 | INFO | google_sheets | Google Sheets client authenticated.
+2026-05-01 15:11:01 | INFO | google_sheets | Extracted 6 rows from tab 'marks'.
+2026-05-01 15:11:03 | INFO | google_sheets | Google Sheets client authenticated.
+2026-05-01 15:11:05 | INFO | google_sheets | Extracted 6 rows from tab 'theory_attendance'.
+2026-05-01 15:11:07 | INFO | google_sheets | Google Sheets client authenticated.
+2026-05-01 15:11:09 | INFO | google_sheets | Extracted 6 rows from tab 'lab_attendance'.

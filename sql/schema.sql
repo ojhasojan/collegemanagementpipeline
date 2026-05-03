@@ -1,5 +1,15 @@
--- =========================
--- PROGRAMS TABLE
+
+-- =========================================
+-- FULL RESET (SAFE TO RERUN)
+-- =========================================
+DROP SCHEMA IF EXISTS public CASCADE;
+CREATE SCHEMA public;
+
+GRANT ALL ON SCHEMA public TO user_college;
+GRANT ALL ON SCHEMA public TO public;
+
+
+-- PROGRAMS
 -- =========================
 CREATE TABLE programs (
     program_id SERIAL PRIMARY KEY,
@@ -7,7 +17,7 @@ CREATE TABLE programs (
 );
 
 -- =========================
--- SEMESTERS TABLE
+-- SEMESTERS
 -- =========================
 CREATE TABLE semesters (
     semester_id SERIAL PRIMARY KEY,
@@ -15,80 +25,89 @@ CREATE TABLE semesters (
 );
 
 -- =========================
--- STUDENTS TABLE
+-- TEACHERS
+-- =========================
+CREATE TABLE teachers (
+    teacher_id SERIAL PRIMARY KEY,
+    teacher_name VARCHAR(100) NOT NULL UNIQUE,
+    department VARCHAR(100),
+    email VARCHAR(100),
+    phone VARCHAR(20)
+);
+
+-- =========================
+-- STUDENTS (✅ semester_id added)
 -- =========================
 CREATE TABLE students (
     student_id SERIAL PRIMARY KEY,
-    registration_number VARCHAR(50) UNIQUE NOT NULL,
-    roll_no VARCHAR(20) UNIQUE,
+    registration_number VARCHAR(50) NOT NULL UNIQUE,
+    roll_no VARCHAR(20) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50),
     gender VARCHAR(10),
     date_of_birth DATE,
-    program_id INT REFERENCES programs(program_id),
-    admission_year INT
+    program_id INT NOT NULL REFERENCES programs(program_id),
+    semester_id INT NOT NULL REFERENCES semesters(semester_id),
+    admission_year INT,
+    CONSTRAINT uq_roll_per_semester UNIQUE (semester_id, roll_no)
 );
-
 -- =========================
--- TEACHERS TABLE
--- =========================
-CREATE TABLE teachers (
-    teacher_id SERIAL PRIMARY KEY,
-    teacher_name VARCHAR(100) NOT NULL,
-    department VARCHAR(100),
-    email VARCHAR(100)
-);
-
--- =========================
--- SUBJECTS TABLE
+-- SUBJECTS
 -- =========================
 CREATE TABLE subjects (
     subject_id SERIAL PRIMARY KEY,
-    subject_code VARCHAR(20) UNIQUE,
+    subject_code VARCHAR(20) NOT NULL UNIQUE,
     subject_name VARCHAR(100) NOT NULL,
-    program_id INT REFERENCES programs(program_id),
-    semester_id INT REFERENCES semesters(semester_id),
-    subject_type VARCHAR(20) CHECK (subject_type IN ('THEORY','LAB'))
+    program_id INT NOT NULL REFERENCES programs(program_id),
+    semester_id INT NOT NULL REFERENCES semesters(semester_id),
+    subject_type VARCHAR(20) NOT NULL
+        CHECK (subject_type IN ('THEORY', 'LAB'))
 );
 
 -- =========================
--- SUBJECT-TEACHER MAPPING
+-- SUBJECT ↔ TEACHER
 -- =========================
 CREATE TABLE subject_teacher (
     id SERIAL PRIMARY KEY,
-    subject_id INT REFERENCES subjects(subject_id),
-    teacher_id INT REFERENCES teachers(teacher_id),
-    teacher_role VARCHAR(10) CHECK (teacher_role IN ('THEORY', 'LAB'))
+    subject_id INT NOT NULL REFERENCES subjects(subject_id),
+    teacher_id INT NOT NULL REFERENCES teachers(teacher_id),
+    teacher_role VARCHAR(10) NOT NULL
+        CHECK (teacher_role IN ('THEORY', 'LAB')),
+    CONSTRAINT uq_subject_teacher UNIQUE (subject_id, teacher_id, teacher_role)
 );
 
 -- =========================
--- ENROLLMENTS TABLE
+-- ENROLLMENTS
+-- Semester is derived from students
 -- =========================
 CREATE TABLE enrollments (
     enrollment_id SERIAL PRIMARY KEY,
-    student_id INT REFERENCES students(student_id),
-    semester_id INT REFERENCES semesters(semester_id),
-    academic_year VARCHAR(20)
+    student_id INT NOT NULL REFERENCES students(student_id),
+    semester_id INT NOT NULL REFERENCES semesters(semester_id),
+    academic_year VARCHAR(20) NOT NULL,
+    CONSTRAINT uq_enrollment UNIQUE (student_id, semester_id, academic_year)
 );
 
 -- =========================
--- EXAMS TABLE
+-- EXAMS
 -- =========================
 CREATE TABLE exams (
     exam_id SERIAL PRIMARY KEY,
-    exam_name VARCHAR(50) UNIQUE NOT NULL,
-    applies_to VARCHAR(10) NOT NULL CHECK (applies_to IN ('THEORY', 'LAB', 'BOTH'))
+    exam_name VARCHAR(50) NOT NULL UNIQUE,
+    applies_to VARCHAR(10) NOT NULL
+        CHECK (applies_to IN ('THEORY', 'LAB', 'BOTH'))
 );
 
 -- =========================
--- MARKS TABLE
+-- MARKS
 -- =========================
 CREATE TABLE marks (
     mark_id SERIAL PRIMARY KEY,
-    student_id INT REFERENCES students(student_id),
-    subject_id INT REFERENCES subjects(subject_id),
-    exam_id INT REFERENCES exams(exam_id),
-    marks INT
+    student_id INT NOT NULL REFERENCES students(student_id),
+    subject_id INT NOT NULL REFERENCES subjects(subject_id),
+    exam_id INT NOT NULL REFERENCES exams(exam_id),
+    marks INT,
+    CONSTRAINT uq_marks UNIQUE (student_id, subject_id, exam_id)
 );
 
 -- =========================
@@ -96,10 +115,12 @@ CREATE TABLE marks (
 -- =========================
 CREATE TABLE theory_attendance (
     attendance_id SERIAL PRIMARY KEY,
-    student_id INT REFERENCES students(student_id),
-    subject_id INT REFERENCES subjects(subject_id),
-    total_classes INT,
-    attended_classes INT
+    student_id INT NOT NULL REFERENCES students(student_id),
+    subject_id INT NOT NULL REFERENCES subjects(subject_id),
+    attendance_date DATE NOT NULL,
+    is_present BOOLEAN DEFAULT FALSE,
+    CONSTRAINT uq_theory_attendance
+        UNIQUE (student_id, subject_id, attendance_date)
 );
 
 -- =========================
@@ -107,8 +128,10 @@ CREATE TABLE theory_attendance (
 -- =========================
 CREATE TABLE lab_attendance (
     attendance_id SERIAL PRIMARY KEY,
-    student_id INT REFERENCES students(student_id),
-    subject_id INT REFERENCES subjects(subject_id),
-    total_classes INT,
-    attended_classes INT
+    student_id INT NOT NULL REFERENCES students(student_id),
+    subject_id INT NOT NULL REFERENCES subjects(subject_id),
+    attendance_date DATE NOT NULL,
+    is_present BOOLEAN DEFAULT FALSE,
+    CONSTRAINT uq_lab_attendance
+        UNIQUE (student_id, subject_id, attendance_date)
 );

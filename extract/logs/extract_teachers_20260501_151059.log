@@ -1,0 +1,6 @@
+2026-05-01 15:10:59 | INFO | extract_teachers | === Starting teacher pipeline ===
+2026-05-01 15:10:59 | INFO | extract_teachers | --- Processing: Sojan Ojha ---
+2026-05-01 15:10:59 | INFO | extract_teachers | Processing tab: marks
+2026-05-01 15:11:03 | INFO | extract_teachers | Processing tab: theory_attendance
+2026-05-01 15:11:07 | INFO | extract_teachers | Processing tab: lab_attendance
+2026-05-01 15:11:10 | INFO | extract_teachers | === Teacher pipeline complete ===

@@ -10,9 +10,10 @@ dependencies = [
     "gspread",
     "google-auth",
     "python-dotenv",
-    "dbt-postgres",
-    "apache-airflow",
     "loguru",
+    "pip>=26.1",
+    "dbt-postgres>=1.10.0",
+    "dbt-core>=1.11.8",
 ]
 
 [tool.uv]

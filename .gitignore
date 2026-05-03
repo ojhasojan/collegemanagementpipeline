@@ -9,3 +9,4 @@ data/staging/*
 !data/staging/.gitkeep
 target/
 dbt_packages/
+credentials.json
